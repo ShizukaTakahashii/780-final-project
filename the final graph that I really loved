@@ -1,0 +1,19 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+age_data = deaths[(deaths['State'] == "United States") & (deaths['Sex'] == "All Sexes") & deaths['Age Group'].str.contains('years')]
+
+age_data = age_data.dropna(subset=['COVID-19 Deaths'])
+
+sorted_age_groups = ["0-17 years", "18-29 years", "30-39 years", "40-49 years", "50-64 years", "65-74 years", "75-84 years", "85 years and over"]
+age_data = age_data.set_index('Age Group').loc[sorted_age_groups].reset_index()
+
+death_counts = [age_data[age_data['Age Group'] == age_group]['COVID-19 Deaths'].tolist() for age_group in sorted_age_groups]
+
+plt.figure(figsize=(12, 7))
+plt.boxplot(death_counts, vert=False, patch_artist=True)
+plt.yticks(range(1, len(sorted_age_groups) + 1), sorted_age_groups)
+plt.title('Distribution of COVID-19 Deaths Across Age Groups')
+plt.xlabel('Number of Deaths')
+plt.tight_layout()
+plt.show()
